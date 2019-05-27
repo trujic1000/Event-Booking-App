@@ -1,0 +1,23 @@
+{
+  "name": "event-booking-react-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Aleksandar Trujic",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.0",
+    "express-graphql": "^0.8.0",
+    "graphql": "^14.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
+}
