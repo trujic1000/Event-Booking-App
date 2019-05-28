@@ -9,7 +9,7 @@ export const AuthContext = createContext(initialState);
 
 export const AuthProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
-  const login = (userId, token, tokenExpiration) => {
+  const login = (token, userId, tokenExpiration) => {
     setState({ token, userId });
   };
   const logout = () => {

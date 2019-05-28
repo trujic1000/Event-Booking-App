@@ -7,3 +7,18 @@ body {
 .main {
   margin: 4rem 2.5rem;
 }
+
+.form-control label,
+.form-control input,
+.form-control textarea {
+  width: 100%;
+  display: block;
+}
+
+.form-control label {
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}

@@ -9,6 +9,7 @@ const Modal = ({
   canConfirm,
   onCancel,
   onConfirm,
+  confirmText,
   children
 }) => {
   return (
@@ -21,7 +22,7 @@ const Modal = ({
         <section className="content">{children}</section>
         <section className="actions">
           {canCancel && <Button onClick={onCancel}>Cancel</Button>}
-          {canConfirm && <Button onClick={onConfirm}>Confirm</Button>}
+          {canConfirm && <Button onClick={onConfirm}>{confirmText}</Button>}
         </section>
       </ModalWrapper>
     </>
@@ -35,6 +36,7 @@ const ModalWrapper = styled.div`
   position: fixed;
   top: 20vh;
   left: 5%;
+  z-index: 99;
 
   @media (min-width: 768px) {
     width: 30rem;

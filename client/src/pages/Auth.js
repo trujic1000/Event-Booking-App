@@ -10,6 +10,7 @@ const Auth = () => {
     email: '',
     password: ''
   });
+  const { email, password } = authData;
   const [isLogin, setLogin] = useState(true);
   const onSubmit = e => {
     const { email, password } = authData;
@@ -23,8 +24,8 @@ const Auth = () => {
     // Data if logging in
     let data = {
       query: `
-        query {
-          login(email: "${email}", password: "${password}") {
+        query Login($email: String!, $password: String!){
+          login(email: $email, password: $password) {
             userId
             token
             tokenExpiration
@@ -36,8 +37,8 @@ const Auth = () => {
     if (!isLogin) {
       data = {
         query: `
-          mutation {
-            createUser(userInput: {email: "${email}", password: "${password}"}) {
+          mutation CreateUser($email: String!, $password: String!){
+            createUser(userInput: {email: $email, password: $password}) {
               _id
               email
             }
@@ -45,6 +46,10 @@ const Auth = () => {
         `
       };
     }
+    data.variables = {
+      email,
+      password
+    };
     // Preparing for sending a request
     data = JSON.stringify(data);
     const config = {
@@ -70,7 +75,13 @@ const Auth = () => {
     <AuthForm onSubmit={onSubmit}>
       <div className="form-control">
         <label htmlFor="email">E-mail</label>
-        <input type="email" id="email" name="email" onChange={onChange} />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={onChange}
+        />
       </div>
       <div className="form-control">
         <label htmlFor="password">Password</label>
@@ -78,6 +89,7 @@ const Auth = () => {
           type="password"
           id="password"
           name="password"
+          value={password}
           onChange={onChange}
         />
       </div>
@@ -93,20 +105,6 @@ const AuthForm = styled.form`
   width: 25rem;
   max-width: 80%;
   margin: 5rem auto;
-
-  .form-control label,
-  .form-control input {
-    width: 100%;
-    display: block;
-  }
-
-  .form-control label {
-    margin-bottom: 0.5rem;
-  }
-
-  .form-control {
-    margin-bottom: 1rem;
-  }
 `;
 
 export default Auth;
