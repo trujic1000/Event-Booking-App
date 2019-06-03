@@ -3,94 +3,79 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthState } from '../context/auth-context';
 
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  title: {
+    flexGrow: 10
+  },
+  nav: {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'center'
+  },
+  navLink: {
+    textAlign: 'center'
+  }
+}));
+
+function ListItemLink(props) {
+  return <ListItem component={NavLink} {...props} />;
+}
+
 const MainNavigation = () => {
+  const classes = useStyles();
   const {
     state: { token },
     logout
   } = useAuthState();
   return (
-    <NavContainer>
-      <div className="main-nav-logo">
-        <h2>Eventim</h2>
-      </div>
-      <nav className="main-nav-items">
-        <ul>
-          {!token && (
-            <li>
-              <NavLink to="/auth">Authenticate</NavLink>
-            </li>
-          )}
-          <li>
-            <NavLink to="/events">Events</NavLink>
-          </li>
-          {token && (
-            <>
-              <li>
-                <NavLink to="/bookings">Bookings</NavLink>
-              </li>
-              <li>
-                <button onClick={logout}>Logout</button>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-    </NavContainer>
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            News
+          </Typography>
+          <List component="nav" className={classes.nav}>
+            {!token && (
+              <>
+                <ListItemLink to="/login">
+                  <ListItemText className={classes.navLink} primary="Login" />
+                </ListItemLink>
+                <ListItemLink to="/register">
+                  <ListItemText className={classes.navLink} primary="Sign Up" />
+                </ListItemLink>
+              </>
+            )}
+            <ListItemLink to="/events">
+              <ListItemText className={classes.navLink} primary="Events" />
+            </ListItemLink>
+            {token && (
+              <>
+                <ListItemLink to="/bookings">
+                  <ListItemText
+                    className={classes.navLink}
+                    primary="Bookings"
+                  />
+                </ListItemLink>
+                <Button color="inherit">Logout</Button>
+              </>
+            )}
+          </List>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
-
-const NavContainer = styled.header`
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 3.5rem;
-  background: #01d1d1;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .main-nav-logo {
-    margin: 0;
-    font-size: 1.2rem;
-  }
-
-  .main-nav-items {
-    margin-right: 2rem;
-  }
-
-  .main-nav-items ul {
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    align-items: center;
-  }
-
-  .main-nav-items ul li {
-    margin: 0 1rem;
-  }
-
-  .main-nav-items ul li a,
-  .main-nav-items ul li button {
-    text-decoration: none;
-    color: #000;
-    padding: 0.25rem 0.5rem;
-    margin: 0;
-    border: none;
-    font: inherit;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .main-nav-items ul li a:hover,
-  .main-nav-items ul li a:active,
-  .main-nav-items ul li a.active,
-  .main-nav-items ul li button:hover,
-  .main-nav-items ul li button:active {
-    color: #fff;
-  }
-`;
 
 export default MainNavigation;

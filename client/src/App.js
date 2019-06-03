@@ -18,11 +18,11 @@ function App() {
       <main className="main">
         <Switch>
           {token && <Redirect exact from="/" to="/events" />}
-          {token && <Redirect exact from="/auth" to="/events" />}
-          {!token && <Route path="/auth" component={Auth} />}
+          {token && <Redirect exact from="/login" to="/events" />}
+          {!token && <Route path="/login" component={Auth} />}
           {token && <Route path="/bookings" component={Bookings} />}
           <Route path="/events" component={Events} />
-          {!token && <Redirect exact to="/auth" />}
+          {!token && <Redirect exact to="/login" />}
         </Switch>
       </main>
     </>
