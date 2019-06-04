@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext } from 'react';
+import setAuthToken from '../utils/setAuthToken';
 
 const initialState = {
+  name: null,
   token: null,
   userId: null
 };
@@ -9,10 +11,11 @@ export const AuthContext = createContext(initialState);
 
 export const AuthProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
-  const login = (token, userId) => {
-    setState({ token, userId });
+  const login = (name, token, userId) => {
+    setState({ name, token, userId });
     if (!localStorage.jwt) {
       localStorage.setItem('jwt', token);
+      setAuthToken(token);
     }
   };
   const logout = () => {

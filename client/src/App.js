@@ -5,9 +5,10 @@ import { useAuthState } from './context/auth-context';
 import setAuthToken from './utils/setAuthToken';
 import './App.css';
 
-import Auth from './pages/Auth';
+import Login from './pages/Login';
 import Events from './pages/Events';
 import Bookings from './pages/Bookings';
+import Register from './pages/Register';
 import Navbar from './components/navigation/Navbar';
 
 function App() {
@@ -43,9 +44,9 @@ function App() {
           {token && <Redirect exact from="/" to="/events" />}
           {token && <Redirect exact from="/login" to="/events" />}
           {token && <Redirect exact from="/register" to="/events" />}
-          {!token && <Route path="/login" component={Auth} />}
-          {!token && <Route path="/register" component={Auth} />}
           {token && <Route path="/bookings" component={Bookings} />}
+          {!token && <Route path="/login" component={Login} />}
+          {!token && <Route path="/register" component={Register} />}
           <Route path="/events" component={Events} />
           {!token && <Redirect exact to="/login" />}
         </Switch>

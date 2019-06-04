@@ -23,6 +23,7 @@ module.exports = {
       if (!event) {
         throw new Error('Invalid event id');
       }
+      console.log(event);
       let booking = new Booking({
         event,
         user: userId
