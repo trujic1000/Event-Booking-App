@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { useAuthState } from '../context/auth-context';
 import { Button } from '../components/Button';
 
@@ -19,8 +19,6 @@ const Auth = () => {
     if (email.trim().length === 0 || password.trim().length === 0) {
       return;
     }
-    // Request Config
-    const url = 'http://localhost:8000/graphql';
     // Data if logging in
     let data = {
       query: `
@@ -52,14 +50,9 @@ const Auth = () => {
     };
     // Preparing for sending a request
     data = JSON.stringify(data);
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
     // Register user
     axios
-      .post(url, data, config)
+      .post('', data)
       .then(res => {
         const { token, userId, tokenExpiration } = res.data.data.login;
         if (token) {

@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState } from 'react';
 import { useAuthState } from '../../context/auth-context';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';

@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { Link, NavLink as LinkNav } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 import { useAuthState } from '../../context/auth-context';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AdapterLink = forwardRef((props, ref) => (
-  <LinkNav innerRef={ref} {...props} />
+  <Link innerRef={ref} {...props} />
 ));
 
 const NavLink = props => {

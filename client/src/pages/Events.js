@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { Button } from '../components/Button';
 import Modal from '../components/Modal';
 import { useAuthState } from '../context/auth-context';
@@ -47,7 +47,6 @@ const Events = () => {
       return;
     }
     // Request Config
-    const url = 'http://localhost:8000/graphql';
     let data = {
       query: `
           mutation BookEvent($id: ID!){
@@ -64,15 +63,9 @@ const Events = () => {
     };
     // Preparing for sending a request
     data = JSON.stringify(data);
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    };
     // Book an event
     axios
-      .post(url, data, config)
+      .post('', data)
       .then(res => {
         setEvent(null);
       })
@@ -89,7 +82,6 @@ const Events = () => {
       return;
     }
     // Request Config
-    const url = 'http://localhost:8000/graphql';
     let data = {
       query: `
           mutation CreateEvent($title: String!, $description: String!, $price: Float!, $date: String!) {
@@ -111,15 +103,9 @@ const Events = () => {
     };
     // Preparing for sending a request
     data = JSON.stringify(data);
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    };
     // Create an event
     axios
-      .post(url, data, config)
+      .post('/', data)
       .then(res => {
         const newEvent = res.data.data.createEvent;
         newEvent.creator = { _id: userId };
@@ -131,7 +117,6 @@ const Events = () => {
 
   const fetchEvents = () => {
     // Request Config
-    const url = 'http://localhost:8000/graphql';
     let data = {
       query: `
           query {
@@ -151,17 +136,11 @@ const Events = () => {
     };
     // Preparing for sending a request
     data = JSON.stringify(data);
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    };
     // Get events
     axios
-      .post(url, data, config)
+      .post('/', data)
       .then(res => {
-        const events = res.data.data.events;
+        const { events } = res.data.data;
         setEvents(events);
         setLoading(false);
       })

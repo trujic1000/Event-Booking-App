@@ -9,11 +9,15 @@ export const AuthContext = createContext(initialState);
 
 export const AuthProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
-  const login = (token, userId, tokenExpiration) => {
+  const login = (token, userId) => {
     setState({ token, userId });
+    if (!localStorage.jwt) {
+      localStorage.setItem('jwt', token);
+    }
   };
   const logout = () => {
     setState(initialState);
+    localStorage.removeItem('jwt');
   };
 
   return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button } from './Button';
+
 const EventItem = ({
   event: { _id, title, price, date, creator },
   userId,
