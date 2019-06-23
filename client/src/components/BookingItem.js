@@ -1,31 +1,40 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Button } from './Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    width: '40%',
+    padding: theme.spacing(3, 2),
+    margin: '10px auto',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }
+}));
 
 const BookingItem = ({ booking, cancelBooking }) => {
+  const classes = useStyles();
   const {
     event: { title },
     createdAt
   } = booking;
   return (
-    <>
-      <Item>
-        <article>
-          {title} - {new Date(createdAt).toLocaleDateString()}
-        </article>
-        <Button onClick={() => cancelBooking(booking._id)}>Cancel</Button>
-      </Item>
-    </>
+    <Paper elevation={2} className={classes.paper}>
+      <Typography variant="body1">
+        {title} - {new Date(createdAt).toLocaleDateString()}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => cancelBooking(booking._id)}
+      >
+        Cancel
+      </Button>
+    </Paper>
   );
 };
-
-const Item = styled.li`
-  margin: 0.5rem 0;
-  padding: 0.5rem 1rem;
-  border: 1px solid #01a7a7;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 
 export default BookingItem;

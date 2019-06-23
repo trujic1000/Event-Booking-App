@@ -1,119 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import axios from '../utils/axios';
-import { Button } from '../components/Button';
-import Modal from '../components/Modal';
 import { useAuthState } from '../context/auth-context';
 import EventList from '../components/EventList';
 import Spinner from '../components/Spinner';
+import CreateEventModal from '../components/CreateEventModal';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles(theme => ({
+  heading: {
+    width: '40%',
+    padding: theme.spacing(3, 2),
+    margin: '0 auto 2rem auto',
+    textAlign: 'center'
+  },
+  button: {
+    margin: theme.spacing(1)
+  }
+}));
 
 const Events = () => {
+  const classes = useStyles();
   const {
     state: { token, userId }
   } = useAuthState();
   const [modalOpen, setModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
-  const [event, setEvent] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const [eventData, setEventData] = useState({
-    title: '',
-    price: 0,
-    date: '',
-    description: ''
-  });
-  const { title, price, date, description } = eventData;
 
   useEffect(() => {
     fetchEvents();
   }, []);
 
-  const onChange = e => {
-    setEventData({ ...eventData, [e.target.name]: e.target.value });
-  };
-
-  const onCancel = () => {
-    setModalOpen(false);
-    setEvent(null);
-  };
-
-  const onDetailsClick = eventId => {
-    const event = events.find(e => e._id === eventId);
-    setEvent(event);
-  };
-
-  const bookEvent = () => {
-    if (!token) {
-      setEvent(null);
-      return;
-    }
-    // Request Config
-    let data = {
-      query: `
-          mutation BookEvent($id: ID!){
-            bookEvent(eventId: $id) {
-              _id
-              createdAt
-              updatedAt
-            }
-          }
-        `,
-      variables: {
-        id: event._id
-      }
-    };
-    // Preparing for sending a request
-    data = JSON.stringify(data);
-    // Book an event
-    axios
-      .post('', data)
-      .then(res => {
-        setEvent(null);
-      })
-      .catch(err => console.log(err));
-  };
-
-  const createEvent = () => {
-    if (
-      title.trim().length === 0 ||
-      price <= 0 ||
-      date.trim().length === 0 ||
-      description.trim().length === 0
-    ) {
-      return;
-    }
-    // Request Config
-    let data = {
-      query: `
-          mutation CreateEvent($title: String!, $description: String!, $price: Float!, $date: String!) {
-            createEvent(eventInput: {title: $title, description: $description, price: $price, date: $date}){
-              _id
-              title
-              description
-              date
-              price
-            }
-          }
-        `,
-      variables: {
-        title,
-        description,
-        price: +price,
-        date
-      }
-    };
-    // Preparing for sending a request
-    data = JSON.stringify(data);
-    // Create an event
-    axios
-      .post('/', data)
-      .then(res => {
-        const newEvent = res.data.data.createEvent;
-        newEvent.creator = { _id: userId };
-        setEvents([...events, newEvent]);
-        setModalOpen(false);
-      })
-      .catch(err => console.log(err));
-  };
+  const handleClose = () => setModalOpen(false);
 
   const fetchEvents = () => {
     // Request Config
@@ -151,101 +72,30 @@ const Events = () => {
   };
   return (
     <>
-      {modalOpen && (
-        <Modal
-          title="Add Event"
-          canCancel
-          canConfirm
-          onCancel={onCancel}
-          onConfirm={createEvent}
-          confirmText="Confirm"
-        >
-          <form>
-            <div className="form-control">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={title}
-                onChange={onChange}
-              />
-            </div>
-            <div className="form-control">
-              <label htmlFor="price">Price</label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                value={price}
-                onChange={onChange}
-              />
-            </div>
-            <div className="form-control">
-              <label htmlFor="date">Date</label>
-              <input
-                type="datetime-local"
-                id="date"
-                name="date"
-                value={date}
-                onChange={onChange}
-              />
-            </div>
-            <div className="form-control">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                rows="4"
-                value={description}
-                onChange={onChange}
-              />
-            </div>
-          </form>
-        </Modal>
-      )}
-      {event && (
-        <Modal
-          title={event.title}
-          canCancel
-          canConfirm
-          onCancel={onCancel}
-          onConfirm={bookEvent}
-          confirmText={token ? 'Book' : 'Confirm'}
-        >
-          <h1>{event.title}</h1>
-          <h2>
-            ${event.price} - {new Date(event.date).toLocaleDateString()}
-          </h2>
-          <p>{event.description}</p>
-        </Modal>
-      )}
+      <CreateEventModal
+        open={modalOpen}
+        handleClose={handleClose}
+        events={events}
+        setEvents={setEvents}
+      />
       {token && (
-        <EventsControl>
-          <p>Share your own events</p>
-          <Button onClick={() => setModalOpen(true)}>Create Event</Button>
-        </EventsControl>
+        <Paper elevation={4} className={classes.heading}>
+          <Typography variant="h5" component="h2">
+            Share your own events
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => setModalOpen(true)}
+          >
+            Create Event
+          </Button>
+        </Paper>
       )}
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <EventList
-          events={events}
-          userId={userId}
-          onDetailsClick={onDetailsClick}
-        />
-      )}
+      {isLoading ? <Spinner /> : <EventList events={events} userId={userId} />}
     </>
   );
 };
-
-const EventsControl = styled.div`
-  text-align: center;
-  border: 1px solid #01d1d1;
-  padding: 1rem;
-  margin: 2rem auto;
-  width: 30rem;
-  max-width: 80%;
-`;
 
 export default Events;

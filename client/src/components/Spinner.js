@@ -28,8 +28,8 @@ const SpinnerIcon = styled.div`
     height: 46px;
     margin: 1px;
     border-radius: 50%;
-    border: 5px solid #01a7a7;
-    border-color: #01a7a7 transparent #01a7a7 transparent;
+    border: 5px solid #3f51b5;
+    border-color: #3f51b5 transparent #3f51b5 transparent;
     animation: lds-dual-ring 1.2s linear infinite;
   }
 

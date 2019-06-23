@@ -1,54 +1,61 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Button } from './Button';
+import React, { useState } from 'react';
+import EventDetailsModal from './EventDetailsModal';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
-const EventItem = ({
-  event: { _id, title, price, date, creator },
-  userId,
-  onDetailsClick
-}) => {
+const useStyles = makeStyles(theme => ({
+  paper: {
+    width: '40%',
+    padding: theme.spacing(3, 2),
+    margin: '10px auto',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }
+}));
+
+const EventItem = ({ event, userId }) => {
+  const { title, date, creator } = event;
+  const [modalOpen, setModalOpen] = useState(false);
+  const classes = useStyles();
+
+  const handleClose = () => setModalOpen(false);
   return (
-    <Item>
-      <div>
-        <h1>{title}</h1>
-        <h2>
-          ${price} - {new Date(date).toLocaleDateString()}
-        </h2>
-      </div>
-      <div>
-        {userId !== creator._id ? (
-          <Button onClick={() => onDetailsClick(_id)}>View Details</Button>
-        ) : (
-          <p>You are the owner of this event</p>
-        )}
-      </div>
-    </Item>
+    <>
+      <EventDetailsModal
+        open={modalOpen}
+        event={event}
+        handleClose={handleClose}
+      />
+      <Paper elevation={2} className={classes.paper}>
+        <div>
+          <Typography variant="h5" component="h1">
+            {title}
+          </Typography>
+          <Typography variant="body1">
+            {new Date(date).toLocaleDateString()}
+          </Typography>
+        </div>
+        <div>
+          {userId !== creator._id ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setModalOpen(true)}
+            >
+              View Details
+            </Button>
+          ) : (
+            <Typography variant="body2">
+              You are the owner of this event
+            </Typography>
+          )}
+        </div>
+      </Paper>
+    </>
   );
 };
-
-const Item = styled.li`
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid #01a7a7;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #01a7a7;
-  }
-
-  h2 {
-    margin: 0.5rem 0 0 0;
-    font-size: 1rem;
-    color: #7c7c7c;
-  }
-
-  p {
-    margin: 0;
-  }
-`;
 
 export default EventItem;
